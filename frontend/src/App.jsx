@@ -2,7 +2,7 @@ import { useEffect, useState, useCallback } from "react";
 
 /* ================= helpers ================= */
 async function api(path, method = "GET", body) {
-  const r = await fetch("/api" + path, { method, headers: { "Content-Type": "application/json" }, body: body ? JSON.stringify(body) : undefined });
+  const r = await fetch((import.meta.env.VITE_API_URL || "") + "/api" + path, { method, headers: { "Content-Type": "application/json" }, body: body ? JSON.stringify(body) : undefined });
   const j = await r.json().catch(() => ({ success: false, message: "Backend not reachable. Is run.bat running?" }));
   if (!j.success) throw new Error(j.message);
   return j.data;
@@ -149,7 +149,7 @@ function Candidates({ me, toast }) {
         <select className="in" value={fs} onChange={(e) => setFs(e.target.value)}><option value="">All statuses</option>{STATUSES.map((s) => <option key={s}>{s}</option>)}</select>
         <select className="in" value={fr} onChange={(e) => setFr(e.target.value)}><option value="">All recommendations</option>{RECS.map((s) => <option key={s}>{s}</option>)}</select>
       </div>
-      <div className="row" style={{ marginTop: 12 }}><button className="btn p" onClick={() => setForm(emptyForm)}>+ Add candidate</button><a className="btn" href="/api/export.csv">⬇ Export Excel (CSV)</a></div></div>
+      <div className="row" style={{ marginTop: 12 }}><button className="btn p" onClick={() => setForm(emptyForm)}>+ Add candidate</button><a className="btn" href={(import.meta.env.VITE_API_URL || "") + "/api/export.csv"}>⬇ Export Excel (CSV)</a></div></div>
       {form && (
         <div className="card"><h3>New candidate</h3><div className="grid gf">
           {F("name", "Full name *")}{F("email", "Email *", "email")}{F("phone", "Phone")}{F("applied_role", "Applied role *")}

@@ -48,5 +48,6 @@ if _front:
     CSRF_TRUSTED_ORIGINS = [_front]
 STATIC_ROOT = BASE_DIR / "staticfiles"
 if "whitenoise.middleware.WhiteNoiseMiddleware" not in MIDDLEWARE:
-    _i = MIDDLEWARE.index("django.middleware.security.SecurityMiddleware") + 1
+    _sm = "django.middleware.security.SecurityMiddleware"
+    _i = MIDDLEWARE.index(_sm) + 1 if _sm in MIDDLEWARE else 0
     MIDDLEWARE.insert(_i, "whitenoise.middleware.WhiteNoiseMiddleware")

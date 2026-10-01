@@ -51,3 +51,11 @@ if "whitenoise.middleware.WhiteNoiseMiddleware" not in MIDDLEWARE:
     _sm = "django.middleware.security.SecurityMiddleware"
     _i = MIDDLEWARE.index(_sm) + 1 if _sm in MIDDLEWARE else 0
     MIDDLEWARE.insert(_i, "whitenoise.middleware.WhiteNoiseMiddleware")
+
+
+# --- brevo email ---
+import os as _b
+BREVO_API_KEY = _b.environ.get("BREVO_API_KEY", "")
+EMAIL_TIMEOUT = 10
+if BREVO_API_KEY:
+    EMAIL_BACKEND = "api.brevo_backend.BrevoEmailBackend"

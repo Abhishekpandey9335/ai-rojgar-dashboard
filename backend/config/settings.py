@@ -31,3 +31,22 @@ import os as _os
 if _os.environ.get("DATABASE_URL"):
     import dj_database_url as _dj
     DATABASES = {"default": _dj.parse(_os.environ["DATABASE_URL"], conn_max_age=600)}
+
+
+# --- deploy settings ---
+import os as _o
+if _o.environ.get("SECRET_KEY"):
+    SECRET_KEY = _o.environ["SECRET_KEY"]
+if _o.environ.get("DEBUG") is not None:
+    DEBUG = _o.environ["DEBUG"] == "1"
+_hosts = [h.strip() for h in _o.environ.get("ALLOWED_HOSTS", "").split(",") if h.strip()]
+if _hosts:
+    ALLOWED_HOSTS = _hosts
+_front = _o.environ.get("FRONTEND_URL", "").strip().rstrip("/")
+if _front:
+    CORS_ALLOWED_ORIGINS = [_front]
+    CSRF_TRUSTED_ORIGINS = [_front]
+STATIC_ROOT = BASE_DIR / "staticfiles"
+if "whitenoise.middleware.WhiteNoiseMiddleware" not in MIDDLEWARE:
+    _i = MIDDLEWARE.index("django.middleware.security.SecurityMiddleware") + 1
+    MIDDLEWARE.insert(_i, "whitenoise.middleware.WhiteNoiseMiddleware")
